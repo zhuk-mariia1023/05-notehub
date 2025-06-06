@@ -1,0 +1,6 @@
+.status {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  text-align: center;
+  padding: 16px 0;
+}

@@ -1,6 +1,10 @@
 export interface Note {
-  id: string;
+  _id: string;
   title: string;
   content: string;
-  tag: "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
+  tag: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
+
+export type NewNote = Pick<Note, "title" | "content" | "tag">;

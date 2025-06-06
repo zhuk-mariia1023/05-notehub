@@ -1,0 +1,25 @@
+import ReactDOM from "react-dom";
+import css from "./NoteModal.module.css";
+import NoteForm from "../NoteForm/NoteForm";
+
+interface NoteModalProps {
+  onClose: () => void;
+}
+
+const NoteModal = ({ onClose }: NoteModalProps) => {
+  return ReactDOM.createPortal(
+    <div
+      className={css.backdrop}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div className={css.modal} onClick={(e) => e.stopPropagation()}>
+        <NoteForm onCancel={onClose} />
+      </div>
+    </div>,
+    document.body
+  );
+};
+
+export default NoteModal;
