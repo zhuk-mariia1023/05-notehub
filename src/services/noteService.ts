@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Note } from "../types/note";
+import type { Note, NewNote } from "../types/note";
 
 const BASE_URL = "https://notehub-public.goit.study/api";
 const token = import.meta.env.VITE_NOTEHUB_TOKEN;
@@ -13,12 +13,10 @@ const instance = axios.create({
 
 export const fetchNotes = async (
   page: number,
-  search: string = "",
-  perPage: number = 12
+  search: string = ""
 ): Promise<{ notes: Note[]; totalPages: number }> => {
   const params: Record<string, string | number> = {
     page,
-    perPage,
   };
 
   if (search.trim() !== "") {
@@ -29,7 +27,7 @@ export const fetchNotes = async (
   return response.data;
 };
 
-export const createNote = async (data: Omit<Note, "_id">): Promise<Note> => {
+export const createNote = async (data: NewNote): Promise<Note> => {
   const response = await instance.post("/notes", data);
   return response.data;
 };

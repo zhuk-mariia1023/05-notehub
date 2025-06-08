@@ -1,5 +1,5 @@
 export interface Note {
-  _id: string;
+  id: string;
   title: string;
   content: string;
   tag: string;
@@ -7,4 +7,8 @@ export interface Note {
   updatedAt?: string;
 }
 
-export type NewNote = Pick<Note, "title" | "content" | "tag">;
+export type NewNote = {
+  title: string;
+  content: string;
+  tag: string;
+};

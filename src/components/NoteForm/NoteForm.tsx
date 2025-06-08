@@ -12,8 +12,8 @@ interface NoteFormProps {
 const NoteForm = ({ onCancel }: NoteFormProps) => {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
-    mutationFn: createNote,
+  const { mutate, isPending } = useMutation({
+    mutationFn: (noteData: NewNote) => createNote(noteData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       onCancel();
@@ -30,7 +30,7 @@ const NoteForm = ({ onCancel }: NoteFormProps) => {
           .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"])
           .required("Required"),
       })}
-      onSubmit={(values: NewNote) => mutate(values)}
+      onSubmit={(values) => mutate(values)}
     >
       <Form className={css.form}>
         <div className={css.formGroup}>
@@ -67,8 +67,12 @@ const NoteForm = ({ onCancel }: NoteFormProps) => {
           <button type="button" className={css.cancelButton} onClick={onCancel}>
             Cancel
           </button>
-          <button type="submit" className={css.submitButton}>
-            Create note
+          <button
+            type="submit"
+            className={css.submitButton}
+            disabled={isPending}
+          >
+            {isPending ? "Creating..." : "Create note"}
           </button>
         </div>
       </Form>
