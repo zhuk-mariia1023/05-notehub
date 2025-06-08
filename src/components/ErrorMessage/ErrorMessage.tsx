@@ -1,16 +1,13 @@
-import React from "react";
 import css from "./ErrorMessage.module.css";
 
-interface ErrorMessageProps {
+interface Props {
   message: string;
 }
 
-const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
+export default function ErrorMessage({ message }: Props) {
   return (
     <div className={css.error} role="alert" aria-live="assertive">
       {message}
     </div>
   );
-};
-
-export default ErrorMessage;
+}

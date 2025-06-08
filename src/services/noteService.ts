@@ -13,10 +13,12 @@ const instance = axios.create({
 
 export const fetchNotes = async (
   page: number,
-  search: string = ""
+  search: string = "",
+  perPage: number = 12
 ): Promise<{ notes: Note[]; totalPages: number }> => {
   const params: Record<string, string | number> = {
     page,
+    perPage,
   };
 
   if (search.trim() !== "") {

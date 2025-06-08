@@ -1,29 +1,40 @@
 import { useState } from "react";
+import { useDebounce } from "use-debounce";
 import css from "./App.module.css";
 import SearchBox from "../SearchBox/SearchBox";
 import Pagination from "../Pagination/Pagination";
 import NoteList from "../NoteList/NoteList";
 import NoteModal from "../NoteModal/NoteModal";
 
-const App = () => {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [search, setSearch] = useState("");
+export default function App() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery] = useDebounce(searchQuery, 500);
+
   const [page, setPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  const totalPages = 5;
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox value={search} onChange={setSearch} />
-        <Pagination page={page} onPageChange={setPage} />
-        <button className={css.button} onClick={() => setModalOpen(true)}>
+        <SearchBox value={searchQuery} onSearch={setSearchQuery} />
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+        <button className={css.button} onClick={openModal}>
           Create note +
         </button>
       </header>
 
-      <NoteList page={page} search={search} />
-      {isModalOpen && <NoteModal onClose={() => setModalOpen(false)} />}
+      <NoteList page={page} search={debouncedQuery} />
+
+      {isModalOpen && <NoteModal onClose={closeModal} />}
     </div>
   );
-};
-
-export default App;
+}

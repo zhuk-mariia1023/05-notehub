@@ -15,7 +15,10 @@ const NoteModal = ({ onClose }: NoteModalProps) => {
       aria-modal="true"
     >
       <div className={css.modal} onClick={(e) => e.stopPropagation()}>
-        <NoteForm onCancel={onClose} />
+        <button type="button" className={css.closeBtn} onClick={onClose}>
+          ×
+        </button>
+        <NoteForm onSuccess={onClose} />
       </div>
     </div>,
     document.body

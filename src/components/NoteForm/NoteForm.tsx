@@ -1,22 +1,22 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import css from "./NoteForm.module.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote } from "../../services/noteService";
 import type { NewNote } from "../../types/note";
+import css from "./NoteForm.module.css";
 
 interface NoteFormProps {
-  onCancel: () => void;
+  onSuccess: () => void;
 }
 
-const NoteForm = ({ onCancel }: NoteFormProps) => {
+export default function NoteForm({ onSuccess }: NoteFormProps) {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (noteData: NewNote) => createNote(noteData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
-      onCancel();
+      onSuccess();
     },
   });
 
@@ -25,7 +25,7 @@ const NoteForm = ({ onCancel }: NoteFormProps) => {
       initialValues={{ title: "", content: "", tag: "" }}
       validationSchema={Yup.object({
         title: Yup.string().min(3).max(50).required("Required"),
-        content: Yup.string().max(500),
+        content: Yup.string().max(500, "Max length is 500"),
         tag: Yup.string()
           .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"])
           .required("Required"),
@@ -35,7 +35,7 @@ const NoteForm = ({ onCancel }: NoteFormProps) => {
       <Form className={css.form}>
         <div className={css.formGroup}>
           <label htmlFor="title">Title</label>
-          <Field name="title" className={css.input} />
+          <Field id="title" name="title" className={css.input} />
           <ErrorMessage name="title" component="span" className={css.error} />
         </div>
 
@@ -43,6 +43,7 @@ const NoteForm = ({ onCancel }: NoteFormProps) => {
           <label htmlFor="content">Content</label>
           <Field
             as="textarea"
+            id="content"
             name="content"
             rows={8}
             className={css.textarea}
@@ -52,7 +53,7 @@ const NoteForm = ({ onCancel }: NoteFormProps) => {
 
         <div className={css.formGroup}>
           <label htmlFor="tag">Tag</label>
-          <Field as="select" name="tag" className={css.select}>
+          <Field as="select" id="tag" name="tag" className={css.select}>
             <option value="">Select</option>
             <option value="Todo">Todo</option>
             <option value="Work">Work</option>
@@ -64,9 +65,6 @@ const NoteForm = ({ onCancel }: NoteFormProps) => {
         </div>
 
         <div className={css.actions}>
-          <button type="button" className={css.cancelButton} onClick={onCancel}>
-            Cancel
-          </button>
           <button
             type="submit"
             className={css.submitButton}
@@ -78,6 +76,4 @@ const NoteForm = ({ onCancel }: NoteFormProps) => {
       </Form>
     </Formik>
   );
-};
-
-export default NoteForm;
+}

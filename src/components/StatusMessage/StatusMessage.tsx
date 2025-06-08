@@ -1,16 +1,13 @@
-import React from "react";
 import css from "./StatusMessage.module.css";
 
-interface StatusMessageProps {
+interface Props {
   message: string;
 }
 
-const StatusMessage: React.FC<StatusMessageProps> = ({ message }) => {
+export default function StatusMessage({ message }: Props) {
   return (
     <div className={css.status} role="status" aria-live="polite">
       {message}
     </div>
   );
-};
-
-export default StatusMessage;
+}
