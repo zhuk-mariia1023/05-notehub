@@ -13,28 +13,25 @@ const instance = axios.create({
 
 export const fetchNotes = async (
   page: number,
-  search: string = "",
-  perPage: number = 12
+  search = "",
+  perPage = 12
 ): Promise<{ notes: Note[]; totalPages: number }> => {
-  const params: Record<string, string | number> = {
-    page,
-    perPage,
-  };
+  const params: Record<string, string | number> = { page, perPage };
+  if (search.trim()) params.search = search.trim();
 
-  if (search.trim() !== "") {
-    params.search = search.trim();
-  }
-
-  const response = await instance.get("/notes", { params });
+  const response = await instance.get<{ notes: Note[]; totalPages: number }>(
+    "/notes",
+    { params }
+  );
   return response.data;
 };
 
 export const createNote = async (data: NewNote): Promise<Note> => {
-  const response = await instance.post("/notes", data);
+  const response = await instance.post<Note>("/notes", data);
   return response.data;
 };
 
-export const deleteNote = async (id: string): Promise<Note> => {
-  const response = await instance.delete(`/notes/${id}`);
+export const deleteNote = async (id: number): Promise<Note> => {
+  const response = await instance.delete<Note>(`/notes/${id}`);
   return response.data;
 };

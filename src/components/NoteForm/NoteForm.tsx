@@ -6,23 +6,23 @@ import type { NewNote } from "../../types/note";
 import css from "./NoteForm.module.css";
 
 interface NoteFormProps {
-  onSuccess: () => void;
+  onClose: () => void;
 }
 
-export default function NoteForm({ onSuccess }: NoteFormProps) {
+export default function NoteForm({ onClose }: NoteFormProps) {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (noteData: NewNote) => createNote(noteData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
-      onSuccess();
+      onClose();
     },
   });
 
   return (
     <Formik
-      initialValues={{ title: "", content: "", tag: "" }}
+      initialValues={{ title: "", content: "", tag: "Todo" }}
       validationSchema={Yup.object({
         title: Yup.string().min(3).max(50).required("Required"),
         content: Yup.string().max(500, "Max length is 500"),
@@ -35,7 +35,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
       <Form className={css.form}>
         <div className={css.formGroup}>
           <label htmlFor="title">Title</label>
-          <Field id="title" name="title" className={css.input} />
+          <Field id="title" name="title" type="text" className={css.input} />
           <ErrorMessage name="title" component="span" className={css.error} />
         </div>
 
@@ -54,7 +54,6 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
         <div className={css.formGroup}>
           <label htmlFor="tag">Tag</label>
           <Field as="select" id="tag" name="tag" className={css.select}>
-            <option value="">Select</option>
             <option value="Todo">Todo</option>
             <option value="Work">Work</option>
             <option value="Personal">Personal</option>
@@ -65,6 +64,9 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
         </div>
 
         <div className={css.actions}>
+          <button type="button" className={css.cancelButton} onClick={onClose}>
+            Cancel
+          </button>
           <button
             type="submit"
             className={css.submitButton}

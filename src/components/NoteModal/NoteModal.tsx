@@ -1,12 +1,27 @@
+import { useEffect } from "react";
 import ReactDOM from "react-dom";
-import css from "./NoteModal.module.css";
 import NoteForm from "../NoteForm/NoteForm";
+import css from "./NoteModal.module.css";
 
 interface NoteModalProps {
   onClose: () => void;
 }
 
 const NoteModal = ({ onClose }: NoteModalProps) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
   return ReactDOM.createPortal(
     <div
       className={css.backdrop}
@@ -18,7 +33,7 @@ const NoteModal = ({ onClose }: NoteModalProps) => {
         <button type="button" className={css.closeBtn} onClick={onClose}>
           ×
         </button>
-        <NoteForm onSuccess={onClose} />
+        <NoteForm onClose={onClose} />
       </div>
     </div>,
     document.body
