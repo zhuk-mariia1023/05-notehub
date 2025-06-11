@@ -5,7 +5,6 @@ interface PaginationProps {
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  isDisabled?: boolean;
 }
 
 export default function Pagination({
