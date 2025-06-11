@@ -29,7 +29,10 @@ const NoteModal = ({ onClose }: NoteModalProps) => {
       role="dialog"
       aria-modal="true"
     >
-      <div className={css.modal} onClick={(e) => e.stopPropagation()}>
+      <div
+        className={css.modal}
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+      >
         <button type="button" className={css.closeBtn} onClick={onClose}>
           ×
         </button>
